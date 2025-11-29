@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Details - REFERALLS</title>
+<link rel="stylesheet" href="./assets/css/details.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+<style>
+/* ===== ROOMMATE MODAL STYLES ===== */
+#roommateModal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  padding-top: 80px; 
+  left: 0; top: 0; width: 100%; height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.6);
+}
+
+#roommateModal .modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+#roommateModal .close {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#roommateModal h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#roommateModal form input, 
+#roommateModal form select, 
+#roommateModal form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#roommateModal form button {
+  background: #0b3fea;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#matchedUsers {
+  margin-top: 20px;
+}
+
+#matchedUsers .user-card {
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+/* ===== ROOMMATE BUTTON & MODAL STYLES ===== */
+#findRoommateBtn {
+  display: none;
+  margin-top: 15px;
+  background: #0b3fea;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#findRoommateBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Modal */
+#roommateModal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  padding-top: 80px; 
+  left: 0; top: 0; width: 100%; height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.6);
+}
+
+#roommateModal .modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  position: relative;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+#roommateModal .close {
+  position: absolute;
+  top: 12px; right: 18px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #0b3fea;
+  cursor: pointer;
+}
+
+#roommateModal h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0b3fea;
+}
+
+#roommateModal form input, 
+#roommateModal form select, 
+#roommateModal form textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+#roommateModal form button {
+  background: #0b3fea;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#roommateModal form button:hover {
+  transform: translateY(-2px);
+}
+
+#matchedUsers {
+  margin-top: 20px;
+}
+
+#matchedUsers .user-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#matchedUsers .user-card button {
+  background: #ffd700;
+  color: #000;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+/* ===== BACK TO DASHBOARD BUTTON ===== */
+button[onclick="goBack()"] {
+  background: linear-gradient(135deg, #0a2f08, #1f940a);
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-block;
+}
+
+button[onclick="goBack()"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(47, 255, 85, 0.4);
+}
+
+
+</style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Listing Details</h1>
+  </header>
+
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31698.127806650333!2d5.390600040959501!3d6.737372996656824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sng!4v1763821766321!5m2!1sen!2sng" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <div class="header-container">
+    <img id="listingImage" class="listing-img" src="" alt="Listing Image">
+    <h2 id="listingTitle"></h2>
+    <p id="listingCategory"></p>
+    <p class="price" id="listingPrice"></p>
+    <p class="description" id="listingDescription"></p>
+
+    <div class="seller-box">
+      <img id="sellerPhoto" class="seller-photo" src="images/default-user.jpg" alt="Seller Photo">
+      <div class="seller-info">
+        <h3>
+          <span id="sellerName">Loading...</span>
+          <span id="verifiedBadge" class="verified-badge" style="display:none;">✔ Verified</span>
+        </h3>
+        <button id="chatSellerBtn">💬 Chat Seller</button>
+      </div>
+    </div>
+
+    <div class="safety-note">
+      ⚠️ All transactions are advised to be made only on REFERALLS. Any transaction made outside the site is at users’ own risk.
+    </div>
+
+    <button onclick="goBack()">← Back to Dashboard</button>
+
+    <!-- ✅ Find Roommate Button -->
+    <button id="findRoommateBtn">🔍 Find Roommate</button>
+
+    <!-- ✅ Roommate Modal -->
+    <div id="roommateModal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Find a Roommate</h2>
+        <form id="roommateForm">
+          <input type="number" id="amountAvailable" placeholder="Amount You Can Contribute (₦)" required>
+          <select id="smoking">
+            <option value="">Smoking Preference</option>
+            <option value="yes">Smoker</option>
+            <option value="no">Non-Smoker</option>
+          </select>
+          <select id="pets">
+            <option value="">Pets</option>
+            <option value="yes">Has Pets</option>
+            <option value="no">No Pets</option>
+          </select>
+          <textarea id="bio" rows="3" placeholder="Tell us about yourself" required></textarea>
+          <button type="submit">Submit & Find Matches</button>
+        </form>
+        <div id="matchedUsers"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="listing-container" id="sellerListings"></div>
+
+<footer class="footer-section">
+  <div class="footer-container relative">
+    <div class="footer-brand">
+      <h1>referrals</h1>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { collection, addDoc, getDocs, query, where, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+const listing = JSON.parse(localStorage.getItem("selectedListing"));
+
+// ✅ Show find roommate button only for houses
+const findRoommateBtn = document.getElementById("findRoommateBtn");
+if(listing && listing.category === "House") findRoommateBtn.style.display = "block";
+
+// Modal logic
+const modal = document.getElementById("roommateModal");
+const closeModal = modal.querySelector(".close");
+findRoommateBtn.onclick = () => {
+  if(!auth.currentUser) return alert("Please login to find roommates.");
+  modal.style.display = "block";
+};
+closeModal.onclick = () => modal.style.display = "none";
+window.onclick = (e) => { if(e.target === modal) modal.style.display = "none"; };
+
+// Prefill listing info
+if(listing){
+  document.getElementById("listingImage").src = listing.imageURL || "images/default-user.jpg";
+  document.getElementById("listingTitle").innerText = listing.title;
+  document.getElementById("listingCategory").innerText = "Category: " + listing.category;
+  document.getElementById("listingPrice").innerText = "₦" + listing.price;
+  document.getElementById("listingDescription").innerText = listing.description || "No description available.";
+  document.getElementById("sellerPhoto").src = listing.sellerPhoto || "images/default-user.jpg";
+  if(listing.verifiedSeller) document.getElementById("verifiedBadge").style.display = "inline-block";
+} else {
+  document.querySelector(".container").innerHTML = "<p>Listing not found.</p>";
+}
+
+// ===== NEW: Option 2 implementation =====
+async function loadSellerName() {
+  const el = document.getElementById("sellerName");
+  if(listing?.sellerName){ // already present in listing
+    el.innerText = listing.sellerName;
+    return;
+  }
+  if(listing?.sellerId){ 
+    try {
+      const userRef = doc(db,"users", listing.sellerId);
+      const userSnap = await getDoc(userRef);
+      if(userSnap.exists()){
+        const data = userSnap.data();
+        el.innerText = data.username || data.name || data.displayName || "Unknown Seller";
+        return;
+      }
+    } catch(e){
+      console.error("Error loading seller name:", e);
+    }
+  }
+  el.innerText = "Unknown Seller";
+}
+loadSellerName();
+
+// ✅ LOAD OTHER LISTINGS FROM SAME SELLER
+if (listing?.sellerId) {
+  const sellerListingsDiv = document.getElementById("sellerListings");
+  const q = query(collection(db, "listings"), where("userId", "==", listing.sellerId));
+  const snapshot = await getDocs(q);
+  snapshot.forEach(doc => {
+    const item = doc.data();
+    const div = document.createElement("div");
+    div.className = "listing-card";
+    div.innerHTML = `
+      <img src="${item.imageURL || 'images/default-user.jpg'}" />
+      <h4>${item.title}</h4>
+      <p>₦${item.price}</p>
+    `;
+    div.onclick = () => {
+      localStorage.setItem("selectedListing", JSON.stringify({
+        ...item,
+        id: doc.id,
+        sellerName: item.sellerName,
+        sellerId: item.userId
+      }));
+      window.location.href = "details.html";
+    };
+    sellerListingsDiv.appendChild(div);
+  });
+}
+
+// Back button
+window.goBack = function() { 
+  window.location.href = "index.html"; 
+};
+
+// Chat seller
+document.getElementById("chatSellerBtn").addEventListener("click", () => {
+  if(!auth.currentUser) return alert("Login to chat.");
+  alert("Chat feature coming soon!");
+});
+
+// Roommate form
+document.getElementById("roommateForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const user = auth.currentUser;
+  if(!user) return alert("Please login to submit roommate request.");
+
+  const amountAvailable = Number(document.getElementById("amountAvailable").value);
+  const smoking = document.getElementById("smoking").value;
+  const pets = document.getElementById("pets").value;
+  const bio = document.getElementById("bio").value;
+
+  const request = {
+    userId: user.uid,
+    listingId: listing.id,
+    listingPrice: listing.price,
+    amountAvailable,
+    smoking,
+    pets,
+    bio,
+    createdAt: new Date()
+  };
+
+  await addDoc(collection(db,"roommate_requests"), request);
+  alert("✅ Request submitted. Finding matches...");
+
+  const q = query(collection(db,"roommate_requests"), where("listingId","==",listing.id));
+  const snapshot = await getDocs(q);
+  const requests = snapshot.docs.map(doc => ({id:doc.id, ...doc.data()}));
+
+  const matches = requests
+    .filter(r => r.userId !== user.uid)
+    .map(r => ({...r, totalContribution: r.amountAvailable + amountAvailable}));
+
+  const matchedUsersDiv = document.getElementById("matchedUsers");
+  matchedUsersDiv.innerHTML = "<h3>Matched Roommates</h3>";
+  if(matches.length===0) matchedUsersDiv.innerHTML += "<p>No matches found yet.</p>";
+  matches.forEach(m=>{
+    const div = document.createElement("div");
+    div.className = "user-card";
+    div.innerHTML = `<strong>User:</strong> ${m.userId}<br>
+                     <strong>Contributing:</strong> ₦${m.amountAvailable}<br>
+                     <button onclick="startChat('${m.userId}')">💬 Chat</button>`;
+    matchedUsersDiv.appendChild(div);
+  });
+});
+
+// Chat placeholder
+window.startChat = function(userId){
+  if(!auth.currentUser) return alert("Login to chat.");
+  alert("Start chat with user ID: "+userId);
+};
+
+</script>
+
+</body>
+</html>

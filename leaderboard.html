@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Leaderboard</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; }
+  h2 { text-align: center; margin-bottom: 20px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+  }
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  th {
+    background: #ffa500;
+    color: white;
+  }
+  tr:hover { background-color: #f1f1f1; }
+  #chartContainer {
+    width: 80%;
+    max-width: 600px;
+    margin: auto;
+  }
+</style>
+</head>
+<body>
+
+<h2>🏆 Seller Leaderboard</h2>
+
+<table id="leaderboardTable">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Seller Name</th>
+      <th>Total Sales</th>
+      <th>Total Revenue (₦)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Seller rows will be inserted here -->
+  </tbody>
+</table>
+
+<div id="chartContainer">
+  <canvas id="salesChart"></canvas>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js"></script>
+
+<!-- Chart.js for pie chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// TODO: Replace with your Firebase config
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Fetch sellers from Firestore
+async function loadLeaderboard() {
+  const snapshot = await db.collection("sellers").get();
+  let sellers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  // Sort by totalRevenue descending
+  sellers.sort((a, b) => b.totalRevenue - a.totalRevenue);
+
+  const tbody = document.querySelector("#leaderboardTable tbody");
+  tbody.innerHTML = "";
+
+  // Populate table
+  sellers.forEach((seller, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${seller.name}</td>
+      <td>${seller.totalSales || 0}</td>
+      <td>₦${seller.totalRevenue || 0}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Pie chart data
+  const labels = sellers.map(s => s.name);
+  const dataValues = sellers.map(s => s.totalRevenue || 0);
+
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: dataValues,
+        backgroundColor: [
+          '#FFA500','#FF6347','#32CD32','#1E90FF','#FFD700','#FF69B4','#8A2BE2'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        title: { display: true, text: 'Revenue Distribution Among Sellers' }
+      }
+    }
+  });
+}
+
+// Load leaderboard on page load
+loadLeaderboard();
+</script>
+
+</body>
+</html>

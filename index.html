@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REFERALLS Marketplace</title>
+<link rel="stylesheet" href="./assets/css/index.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+<style>
+/* ====== NEW STYLES FOR LISTINGS GRID ====== */
+.listings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.listing {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+  position: relative;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  color: #bbb;
+  background: #fff;
+  padding: 6px;
+  border-radius: 50%;
+  z-index: 5;
+}
+
+.fav-btn.active {
+  color: red;
+}
+
+.listing:hover {
+  transform: translateY(-5px);
+}
+
+.listing img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.listing .details {
+  padding: 10px;
+}
+
+.listing .details h4 {
+  margin: 0 0 5px 0;
+  color: #0b3fea;
+}
+
+.listing .details p {
+  margin: 3px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.no-listings {
+  text-align: center;
+  grid-column: 1 / -1;
+  font-size: 16px;
+  color: #555;
+}
+
+/* ✅ PRICE FILTER DESIGN */
+.price-filter {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.price-filter input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 120px;
+}
+
+/* ====== LISTING REFERRAL BUTTON ====== */
+.listing .ref-btn {
+  display: block;
+  width: 100%;
+  background: #ffa500;  /* Orange like your dashboard buttons */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 0;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s, transform 0.2s;
+  font-size: 14px;
+}
+
+.listing .ref-btn:hover {
+  background: #e69500;  /* Slightly darker on hover */
+  transform: translateY(-2px);
+}
+.admin-btn {
+  background: #e60000;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+.admin-btn:hover {
+  background: #ff3333;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <div class="navbar-min">
+      <h1>REFERALLS</h1>
+      <div class="access">
+        <button class="uploadbtn" onclick="window.location.href='upload.html'">+ Post Your Listing</button>
+        <span class="fa fa-user-circle profile" title="Profile" onclick="goToDashboard()"></span>
+        <button onclick="window.location.href='adminlogin.html'" class="admin-btn">Admin Login</button>
+      </div>
+  </div>
+</div>
+
+<div class="search-section">
+  <div class="search-min ">
+    <form id="searchForm">
+      <select id="categorySelect">
+        <option value="">All Categories</option>
+        <option value="House">Houses</option>
+        <option value="Car">Cars</option>
+      </select>
+
+      <input type="text" id="searchInput" placeholder="I am looking for..." required>
+
+      <!-- ✅ PRICE FILTER -->
+      <div class="price-filter">
+        <input type="number" id="minPrice" placeholder="Min ₦">
+        <input type="number" id="maxPrice" placeholder="Max ₦">
+      </div>
+
+      <button type="submit" id="searchBtn">Search</button>
+    </form>
+  </div>
+</div>
+
+<div class="categories">
+  <div class="category-card" onclick="filterCategory('House')">
+    <img src="./assets/img/dashboard/houselogo.jpg" alt="House">
+    <h3>Houses</h3>
+  </div>
+  <div class="category-card" onclick="filterCategory('Car')">
+    <img src="images/car.jpg" alt="Car">
+    <h3>Cars</h3>
+  </div>
+</div>
+
+<h2 style="text-align:center;" id="listingsTitle">Trending Listings</h2>
+<div class="listings" id="listingsContainer"></div>
+
+<!-- ✅✅✅ FOOTER COMPLETELY PRESERVED (UNCHANGED) ✅✅✅ -->
+<!-- Start Footer Section -->
+<footer class="footer-section">
+  <style>
+    .footer-section {
+      background: #0b3fea;
+      color: #f1f1f1;
+      padding: 60px 20px 20px;
+      margin-top: 60px;
+    }
+    .footer-container { max-width: 1200px; margin: auto; }
+    .footer-top {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    .footer-brand h1 { font-size: 28px; margin-bottom: 10px; color: #fff; }
+    .footer-brand p { font-size: 14px; color: #ddd; line-height: 1.6; }
+    .footer-links h4, .footer-newsletter h4 { font-size: 16px; margin-bottom: 12px; color: #fff; }
+    .footer-links ul { list-style: none; padding: 0; margin: 0; }
+    .footer-links ul li { margin-bottom: 8px; }
+    .footer-links ul li a {
+      color: #ddd;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .footer-links ul li a:hover { color: #fff; padding-left: 5px; }
+    .footer-social { margin-top: 15px; display: flex; gap: 10px; }
+    .footer-social a {
+      width: 35px; height: 35px; background: #fff; color: #0b3fea;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; transition: 0.3s;
+    }
+    .footer-social a:hover { transform: translateY(-3px); background: #ffd700; }
+    .footer-newsletter input {
+      width: 100%; padding: 10px; margin-bottom: 10px;
+      border-radius: 6px; border: none; outline: none;
+    }
+    .footer-newsletter button {
+      width: 100%; padding: 10px; border: none;
+      background: #ffd700; color: #000; font-weight: bold;
+      border-radius: 6px; cursor: pointer;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 15px; text-align: center; font-size: 14px; color: #ddd;
+    }
+  </style>
+
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h1>REFERALLS</h1>
+        <p>Your trusted marketplace for houses, cars, and everyday deals.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <ul><li><a href="#">About</a></li></ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4>Newsletter</h4>
+        <input type="email" placeholder="Your Email">
+        <button>Subscribe</button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <script>document.write(new Date().getFullYear());</script> REFERALLS.
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+import { auth, db } from "./firebase.js";
+import {
+  collection, getDocs, query, where, orderBy,
+  addDoc, deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+function goToDashboard() {
+  const user = auth.currentUser;
+  if (user) window.location.href = "dashboard.html";
+  else window.location.href = "login.html";
+}
+window.goToDashboard = goToDashboard;
+
+async function fetchListings(category = "", searchText = "") {
+  const listingsCol = collection(db, "listings");
+  let q = category ? query(listingsCol, where("category", "==", category)) : query(listingsCol, orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+
+  let listings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  const min = Number(document.getElementById("minPrice").value);
+  const max = Number(document.getElementById("maxPrice").value);
+
+  if (searchText) {
+    const lower = searchText.toLowerCase();
+    listings = listings.filter(l => l.title.toLowerCase().includes(lower));
+  }
+
+  if (min || max) {
+    listings = listings.filter(l => (!min || l.price >= min) && (!max || l.price <= max));
+  }
+
+  displayListings(listings);
+}
+
+async function toggleFavourite(listing) {
+  const user = auth.currentUser;
+  if (!user) return alert("Login required");
+
+  const favRef = collection(db, "favourites");
+  const q = query(favRef, where("userId", "==", user.uid), where("listingId", "==", listing.id));
+  const snap = await getDocs(q);
+
+  if (snap.empty) {
+    await addDoc(favRef, { userId: user.uid, listingId: listing.id, data: listing });
+  } else {
+    snap.forEach(d => deleteDoc(d.ref));
+  }
+}
+
+function displayListings(listings) {
+  const container = document.getElementById("listingsContainer");
+  container.innerHTML = "";
+
+  if (!listings.length) {
+    container.innerHTML = "<p class='no-listings'>No listings found.</p>";
+    return;
+  }
+
+  listings.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "listing";
+
+    div.innerHTML = `
+  <span class="fav-btn"><i class="fa fa-heart"></i></span>
+  <img src="${item.imageURL || ''}">
+  <div class="details">
+    <h4>${item.title}</h4>
+    <p>${item.category}</p>
+    <p>₦${item.price}</p>
+    <button class="ref-btn" style="margin-top:5px;">Copy Listing Referral</button>
+  </div>
+`;
+
+
+    div.querySelector(".fav-btn").onclick = (e) => {
+      e.stopPropagation();
+      toggleFavourite(item);
+      e.target.classList.toggle("active");
+    };
+
+    div.onclick = () => {
+  localStorage.setItem(
+    "selectedListing",
+    JSON.stringify({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      category: item.category,
+      description: item.description,
+      imageURL: item.imageURL,
+
+      // ✅ THIS IS THE FIX
+      sellerName: item.sellerName,
+      sellerId: item.userId,
+
+      sellerPhoto: item.sellerPhoto || "",
+      verifiedSeller: item.verifiedSeller || false
+    })
+  );
+
+  window.location.href = "details.html";
+};
+
+div.querySelector(".ref-btn").onclick = (e) => {
+  e.stopPropagation();
+  const referralLink = `http://192.168.43.29:59414/signup.html?ref=${encodeURIComponent(item.referralCode)}`;
+  navigator.clipboard.writeText(referralLink)
+    .then(() => alert("Listing referral link copied!"))
+    .catch(err => alert("Failed to copy link: " + err));
+};
+
+    container.appendChild(div);
+  });
+}
+
+document.getElementById("searchForm").onsubmit = (e) => {
+  e.preventDefault();
+  fetchListings(
+    document.getElementById("categorySelect").value,
+    document.getElementById("searchInput").value.trim()
+  );
+};
+
+fetchListings();
+</script>
+
+</body>
+</html>
