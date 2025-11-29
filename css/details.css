@@ -1,0 +1,209 @@
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+}
+
+header {
+    background: #ffa500;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.map-container{
+    height: 50vh;
+    border-radius: 7px;
+    background: rgb(255, 255, 255);
+    margin: 5px 20px;
+}
+.map-container iframe{
+    width: 100%;
+    height: 50vh;
+    border-radius: 7px;
+}
+
+/*========
+grid
+============*/
+.listing-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 40px;
+  gap: 5px;
+  margin-bottom: 10rem;
+}
+.listing-container div {
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 300px;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+}
+@media (max-width: 990px){
+
+    .listing-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 40px;
+    gap: 5px;
+    margin-bottom: 10rem;
+    transition: .5s ease-in-out;
+    }
+}
+@media (max-width: 500px){
+
+    .listing-container {
+    display: grid;
+    grid-template-columns: auto;
+    padding: 40px;
+    gap: 5px;
+    margin-bottom: 10rem;
+    transition: .5s ease-in-out;
+    }
+}
+
+/*======
+footer
+==============*/
+.footer-section{
+    background: #fa9613;
+    margin-bottom: -15px;
+    padding: 20px;
+}
+.footer-brand{
+    text-transform: uppercase;
+    text-align: center;
+    color: white;
+}
+
+.subscription-form h3{
+    text-align: center;
+    text-transform: capitalize;
+    color: white;
+}
+.subscription-form .subscription-area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+}
+.subscription-area input{
+    padding: 6px;
+    border: 1px solid white;
+    text-align: center;
+    border-radius: 5px;
+}
+.subscription-area .btn{
+    padding: 7px;
+    background: white;
+    border: 1px solid white;
+    border-radius: 7px;
+    color: #fa9613;
+}
+
+.footer-writeup{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+.footer-writeup .footer-logo{
+    outline: none;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+.footer-writeup p{
+    text-align: center;
+    max-width: 50rem;
+    color: white;
+}
+
+
+.header-container {
+    max-width: 850px;
+    background: white;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.listing-img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+h2 {
+    color: #333;
+    margin-top: 20px;
+}
+
+.price {
+    color: #ffa500;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.description {
+    margin: 20px 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+.seller-box {
+    display: flex;
+    align-items: center;
+    background: #e8ffe8;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 25px;
+    gap: 15px;
+}
+
+  .seller-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #008000;
+  }
+
+  .seller-info {
+    flex: 1;
+  }
+
+  .seller-info h3 {
+    margin: 5px 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .verified-badge {
+    background: #008000;
+    color: white;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 5px;
+  }
+
+
+  button:hover {
+    background: #006400;
+  }
+
+  .safety-note {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #b22222;
+    background: #fff3f3;
+    padding: 10px;
+    border-radius: 6px;
+  }
